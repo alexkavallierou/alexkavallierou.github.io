@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Alex Kavallierou — AI-generated vertical commercials.">
+<meta property="og:title" content="Alex Kavallierou">
+<meta property="og:description" content="AI-generated commercial spots, shot for the phone.">
+<meta property="og:image" content="https://alexkavallierou.github.io/posters/ACHILLESWATERBOY-full.jpg">
+<style>img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Alex Kavallierou</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=Archivo:wght@400;500;600&display=swap">
+<style>
+  /* Layout: a dark screening room. Name as a marquee, three portrait screens in a row, bio below the fold. */
+  :root {
+    --bg: #0b0b0d;
+    --bg-raised: #141418;
+    --fg: #f2efe9;
+    --fg-muted: #9a978f;
+    --line: #26262c;
+    --accent: #e8c25a;
+    --display: "Big Shoulders Display", "Oswald", "Arial Narrow", sans-serif;
+    --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  /* Top bar */
+  header.bar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+  .bar .wrap {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding-block: 14px;
+  }
+  .brand {
+    font-family: var(--display); font-weight: 800; font-size: 22px; letter-spacing: .04em; text-transform: uppercase;
+    text-decoration: none;
+  }
+  nav { display: flex; gap: 22px; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; font-weight: 500; }
+  nav a { text-decoration: none; color: var(--fg-muted); }
+  nav a:hover, nav a[aria-current="true"] { color: var(--fg); }
+
+  /* Hero */
+  .hero .wrap { padding-block: 56px 28px; }
+  .eyebrow { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0 0 10px; }
+  h1 {
+    font-family: var(--display); font-weight: 800; text-transform: uppercase;
+    font-size: clamp(56px, 11vw, 150px); line-height: .9; letter-spacing: .01em;
+    margin: 0; text-wrap: balance;
+  }
+  .lede { max-width: 56ch; color: var(--fg-muted); font-size: 17px; margin: 22px 0 0; }
+  .lede strong { color: var(--fg); font-weight: 500; }
+
+  /* Work grid */
+  .work .wrap { padding-block: 20px 72px; }
+  .grid {
+    display: grid; gap: 22px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 820px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; } }
+
+  .tile { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .screen {
+    position: relative; aspect-ratio: 9 / 16; max-width: 100%;
+    background: var(--bg-raised); border-radius: 6px; overflow: hidden;
+    border: 1px solid var(--line); cursor: pointer; padding: 0;
+    transition: transform .35s ease, border-color .35s ease;
+  }
+  .screen:hover { transform: translateY(-4px); border-color: #3a3a42; }
+  .screen video, .screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .screen video { opacity: 0; transition: opacity .4s ease; }
+  .screen.playing video { opacity: 1; }
+  .screen .play {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 64px; height: 64px; border-radius: 50%;
+    background: color-mix(in srgb, var(--bg) 60%, transparent);
+    border: 1px solid rgba(255,255,255,.35); backdrop-filter: blur(6px);
+    display: grid; place-items: center; transition: opacity .3s ease;
+  }
+  .screen.playing .play { opacity: 0; }
+  .screen .play svg { width: 22px; height: 22px; fill: var(--fg); margin-left: 3px; }
+  .screen .dur {
+    position: absolute; right: 10px; bottom: 10px; font-size: 11px; letter-spacing: .08em;
+    background: rgba(0,0,0,.55); padding: 3px 7px; border-radius: 3px; font-variant-numeric: tabular-nums;
+  }
+  .meta { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .meta h2 { font-family: var(--display); font-weight: 700; font-size: 24px; letter-spacing: .03em; text-transform: uppercase; margin: 0; line-height: 1.1; }
+  .meta .client { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 600; white-space: nowrap; }
+  .tile p { margin: 0; color: var(--fg-muted); font-size: 14px; }
+
+  /* About */
+  .about { border-top: 1px solid var(--line); }
+  .about .wrap { padding-block: 64px 48px; display: grid; grid-template-columns: 1fr 2fr; gap: 40px; }
+  @media (max-width: 760px) { .about .wrap { grid-template-columns: 1fr; gap: 24px; } }
+  .about h2 { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: 44px; line-height: .95; margin: 0; letter-spacing: .02em; }
+  .about .text { max-width: 62ch; min-width: 0; }
+  .about .text p { margin: 0 0 16px; }
+  .contact { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 28px; }
+  .email {
+    font-family: var(--display); font-weight: 700; font-size: 26px; letter-spacing: .02em;
+    user-select: all; -webkit-user-select: all;
+  }
+  button.copy {
+    font: 600 12px/1 var(--body); letter-spacing: .12em; text-transform: uppercase;
+    background: transparent; color: var(--fg); border: 1px solid var(--fg-muted); border-radius: 999px;
+    padding: 10px 16px; cursor: pointer;
+  }
+  button.copy:hover { border-color: var(--fg); }
+  button.copy.done { border-color: var(--accent); color: var(--accent); }
+
+  footer .wrap { padding-block: 24px 40px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--fg-muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; border-top: 1px solid var(--line); }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 50; background: rgba(5,5,7,.94);
+    display: grid; place-items: center;
+    padding: calc(20px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  }
+  .lightbox video {
+    height: min(92vh, 1280px); max-width: 100%; aspect-ratio: 9 / 16; width: auto;
+    border-radius: 8px; background: #000; box-shadow: 0 30px 80px rgba(0,0,0,.6);
+  }
+  .lightbox .close {
+    position: absolute; top: calc(14px + env(safe-area-inset-top, 0px)); right: calc(14px + env(safe-area-inset-right, 0px));
+    width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3);
+    background: rgba(0,0,0,.5); color: var(--fg); font-size: 22px; cursor: pointer; display: grid; place-items: center;
+  }
+  .lightbox .cap {
+    position: absolute; left: 50%; transform: translateX(-50%); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--fg-muted); white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .screen, .screen video, .screen .play { transition: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#work">Alex Kavallierou</a>
+    <nav>
+      <a href="#work" aria-current="true">Work</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="work">
+  <div class="wrap">
+    <p class="eyebrow">AI-generated commercials · Vertical · 2026</p>
+    <h1>Alex<br>Kavallierou</h1>
+    <p class="lede">Spec spots built end to end with generative video. Each one is a different world: <strong>live-action epic, retro arcade, CG character</strong>. Shot for the phone, 9:16, sound on.</p>
+  </div>
+</section>
+
+<section class="work">
+  <div class="wrap">
+    <div class="grid" id="grid">
+
+      <article class="tile">
+        <button class="screen" type="button" data-src="videos/ACHILLESWATERBOY.mp4" aria-label="Play: Achilles, for Waterboy">
+          <img src="posters/ACHILLESWATERBOY-full.jpg" alt="" width="720" height="1280">
+          <video muted playsinline loop preload="none" poster="posters/ACHILLESWATERBOY-full.jpg" src="videos/ACHILLESWATERBOY.mp4"></video>
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
+          <span class="dur">0:20</span>
+        </button>
+        <div class="meta"><h2>Achilles</h2><span class="client">Waterboy</span></div>
+        <p>A fallen hero, one hydration packet, and a comeback outside the walls of Troy. Live-action style, period costume, sweeping camera.</p>
+      </article>
+
+      <article class="tile">
+        <button class="screen" type="button" data-src="videos/waterboy_fight.mp4" aria-label="Play: Danny Drip vs Nasty Hangover, for Waterboy">
+          <img src="posters/waterboy_fight-full.jpg" alt="" width="720" height="1280">
+          <video muted playsinline loop preload="none" poster="posters/waterboy_fight-full.jpg" src="videos/waterboy_fight.mp4"></video>
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
+          <span class="dur">0:26</span>
+        </button>
+        <div class="meta"><h2>Danny Drip vs. Nasty Hangover</h2><span class="client">Waterboy</span></div>
+        <p>A 90s arcade fighter where a water drop takes on a bottle of liquor. Health bars, super moves, hand-drawn 2D animation.</p>
+      </article>
+
+      <article class="tile">
+        <button class="screen" type="button" data-src="videos/Robots.mp4" aria-label="Play: Morning After, for Waterboy">
+          <img src="posters/Robots-full.jpg" alt="" width="720" height="1280">
+          <video muted playsinline loop preload="none" poster="posters/Robots-full.jpg" src="videos/Robots.mp4"></video>
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
+          <span class="dur">0:09</span>
+        </button>
+        <div class="meta"><h2>Morning After</h2><span class="client">Waterboy</span></div>
+        <p>Robots wake up rough after the party and find out WD-40 doesn't work. Photoreal CG, product-forward, built for a shop-now end card.</p>
+      </article>
+
+      <article class="tile">
+        <button class="screen" type="button" data-src="videos/new4.mp4" aria-label="Play: Starcrusher, for Waterboy">
+          <img src="posters/new4-full.jpg" alt="" width="720" height="1280">
+          <video muted playsinline loop preload="none" poster="posters/new4-full.jpg" src="videos/new4.mp4"></video>
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
+          <span class="dur">0:18</span>
+        </button>
+        <div class="meta"><h2>Starcrusher</h2><span class="client">Waterboy</span></div>
+        <p>A superhero's testimonial gets interrupted by a monster through the kitchen wall. She handles it, sips, and finishes the pitch. Live-action comedy, Daily Hydration.</p>
+      </article>
+
+      <article class="tile">
+        <button class="screen" type="button" data-src="videos/watergirl.mp4" aria-label="Play: Watergirl, for Waterboy">
+          <img src="posters/watergirl-full.jpg" alt="" width="720" height="1280">
+          <video muted playsinline loop preload="none" poster="posters/watergirl-full.jpg" src="videos/watergirl.mp4"></video>
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
+          <span class="dur">0:14</span>
+        </button>
+        <div class="meta"><h2>Watergirl</h2><span class="client">Waterboy</span></div>
+        <p>Watergirl walks you through the Daily Hydration flavor lineup at her kitchen counter. Straight-to-camera talent spot with a lit-fuse gag, built for paid social.</p>
+      </article>
+
+      <article class="tile">
+        <button class="screen" type="button" data-src="videos/wildheart.mp4" aria-label="Play: Starcrusher, for Wild Heart Mamas Coffee">
+          <img src="posters/wildheart-full.jpg" alt="" width="720" height="1280">
+          <video muted playsinline loop preload="none" poster="posters/wildheart-full.jpg" src="videos/wildheart.mp4"></video>
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3l15 9-15 9z"/></svg></span>
+          <span class="dur">0:17</span>
+        </button>
+        <div class="meta"><h2>Starcrusher × Wild Heart</h2><span class="client">Wild Heart Mamas</span></div>
+        <p>Starcrusher takes a break from saving the world to talk coffee. Same hero, new brand: a kitchen-table testimonial for the Community Blend.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <h2>About</h2>
+    <div class="text">
+      <p>I'm Alex Kavallierou, a director and creator making commercials with generative AI. I handle the whole pipeline myself: concept, script, image and video generation, editing, sound, and the final 9:16 cut ready for Instagram, TikTok, and paid social.</p>
+      <p>I like ads that commit to a bit. A hydration brand can be a sword-and-sandals epic one week and a Street Fighter parody the next, and the product still lands. If you have a brand and a loose idea, I can turn it into a finished spot fast.</p>
+      <p>Based in Los Angeles. Available for spec work, freelance, and full-time roles.</p>
+      <div class="contact">
+        <span class="email" id="email">alexkavallierou@gmail.com</span>
+        <button class="copy" type="button" id="copy">Copy email</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Alex Kavallierou</span>
+    <span>All spots generated with AI · 2026</span>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="close" type="button" id="close" aria-label="Close">×</button>
+  <video id="lbVideo" controls playsinline></video>
+  <div class="cap" id="lbCap"></div>
+</div>
+
+<script>
+(function () {
+  var tiles = Array.prototype.slice.call(document.querySelectorAll('.screen'));
+  var hoverable = window.matchMedia('(hover: hover)').matches;
+
+  function start(tile) {
+    var v = tile.querySelector('video');
+    if (!v) return;
+    var p = v.play();
+    if (p && p.catch) p.catch(function () {});
+    tile.classList.add('playing');
+  }
+  function stop(tile) {
+    var v = tile.querySelector('video');
+    if (!v) return;
+    v.pause();
+    tile.classList.remove('playing');
+  }
+
+  if (hoverable) {
+    tiles.forEach(function (t) {
+      t.addEventListener('mouseenter', function () { start(t); });
+      t.addEventListener('mouseleave', function () { stop(t); });
+    });
+  } else if ('IntersectionObserver' in window) {
+    // On phones: the tile closest to the middle of the screen previews itself, muted.
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { e.intersectionRatio > 0.7 ? start(e.target) : stop(e.target); });
+    }, { threshold: [0, 0.7, 1] });
+    tiles.forEach(function (t) { io.observe(t); });
+  }
+
+  // Lightbox with sound
+  var lb = document.getElementById('lightbox');
+  var lbv = document.getElementById('lbVideo');
+  var cap = document.getElementById('lbCap');
+  function open(tile) {
+    tiles.forEach(stop);
+    lbv.src = tile.getAttribute('data-src');
+    cap.textContent = tile.closest('.tile').querySelector('h2').textContent + '  ·  ' + tile.closest('.tile').querySelector('.client').textContent;
+    lb.hidden = false;
+    document.body.style.overflow = 'hidden';
+    var p = lbv.play();
+    if (p && p.catch) p.catch(function () {});
+  }
+  function close() {
+    lbv.pause();
+    lbv.removeAttribute('src');
+    lbv.load();
+    lb.hidden = true;
+    document.body.style.overflow = '';
+  }
+  tiles.forEach(function (t) { t.addEventListener('click', function () { open(t); }); });
+  document.getElementById('close').addEventListener('click', close);
+  lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !lb.hidden) close(); });
+
+  // Copy email
+  var btn = document.getElementById('copy');
+  var email = document.getElementById('email');
+  btn.addEventListener('click', function () {
+    var done = function () { btn.textContent = 'Copied'; btn.classList.add('done'); setTimeout(function () { btn.textContent = 'Copy email'; btn.classList.remove('done'); }, 1800); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(email);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email.textContent).then(done, fallback);
+    } else fallback();
+  });
+
+  // Nav highlight
+  var about = document.getElementById('about');
+  var links = document.querySelectorAll('nav a');
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      var inAbout = es[0].isIntersecting;
+      links.forEach(function (a) { a.setAttribute('aria-current', (a.getAttribute('href') === '#about') === inAbout ? 'true' : 'false'); });
+    }, { threshold: 0.3 }).observe(about);
+  }
+})();
+</script>
+</body>
+</html>
